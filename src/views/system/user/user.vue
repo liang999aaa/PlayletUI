@@ -46,7 +46,6 @@
           label-placement="left"
           :label-width="80"
           class="py-4"
-          show-require-mark
         >
           <n-form-item label="登录名" path="name">
             <n-input placeholder="请输入名称" v-model:value="fromData.name" />
@@ -59,13 +58,13 @@
               v-model:value="fromData.pwd"
             />
           </n-form-item>
-          <n-form-item :show-require-mark="false" label="姓名" path="userName">
+          <n-form-item label="姓名" path="userName">
             <n-input placeholder="请输入姓名" v-model:value="fromData.userName" />
           </n-form-item>
-          <n-form-item :show-require-mark="false" label="手机" path="mobile">
+          <n-form-item label="手机" path="mobile">
             <n-input placeholder="请输入手机" v-model:value="fromData.mobile" />
           </n-form-item>
-          <n-form-item :show-require-mark="false" label="状态" path="status">
+          <n-form-item label="状态" path="status">
             <n-radio-group v-model:value="fromData.status" name="radiogroup">
               <n-space>
                 <n-radio v-for="song in songs" :key="song.value" :value="song.value">
@@ -74,7 +73,7 @@
               </n-space>
             </n-radio-group>
           </n-form-item>
-          <n-form-item :show-require-mark="false" label="角色" path="role">
+          <n-form-item label="角色" path="role">
             <n-checkbox-group v-model:value="fromData.role">
               <n-space item-style="display: flex;">
                 <n-checkbox
@@ -86,7 +85,7 @@
               </n-space>
             </n-checkbox-group>
           </n-form-item>
-          <n-form-item :show-require-mark="false" label="游戏" path="games">
+          <n-form-item label="游戏" path="games">
             <n-checkbox-group v-model:value="fromData.games">
               <n-space item-style="display: flex;">
                 <n-checkbox
@@ -98,7 +97,7 @@
               </n-space>
             </n-checkbox-group>
           </n-form-item>
-          <n-form-item :show-require-mark="false" label="备注" path="remark">
+          <n-form-item label="备注" path="remark">
             <n-input v-model:value="fromData.remark" type="textarea" placeholder="请输入备注" />
           </n-form-item>
         </n-form>
@@ -119,7 +118,6 @@
           label-placement="left"
           :label-width="80"
           class="py-4"
-          show-require-mark
         >
           <n-form-item label="登录名" path="name">
             <n-input disabled placeholder="请输入名称" v-model:value="fromData.name" />
@@ -175,7 +173,7 @@
         options: [
           {
             label: '全部',
-            value: 1,
+            value: -1,
           },
           {
             label: '启用',
@@ -183,7 +181,7 @@
           },
           {
             label: '禁用',
-            value: 2,
+            value: 0,
           },
         ],
       },
@@ -257,6 +255,7 @@
   // 搜索
   const handleSubmit = (val) => {
     console.log('搜索', val);
+    reloadTable();
   };
   // 重置
   const handleReset = () => {

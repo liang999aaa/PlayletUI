@@ -9,3 +9,8 @@ export function getTableList(params) {
 export function getUserList(params) {
   return Alova.Get('/user/list', { params });
 }
+
+// app列表
+export function getAppList(params) {
+  return Alova.Get('/app/list', { params });
+}

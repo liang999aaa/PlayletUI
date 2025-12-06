@@ -238,3 +238,7 @@ export function lighten(color: string, amount: number) {
 export function isUrl(url: string) {
   return /^(http|https):\/\//g.test(url);
 }
+/**
+ * 只能输入数字
+ * */
+export const onlyAllowNumber = (value: string) => !value || /^\d+$/.test(value);

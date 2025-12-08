@@ -8,6 +8,7 @@ import UserTableMock from '../../../../mock/table/userList';
 import SystemMenuMock from '../../../../mock/system/menu';
 import SystemRoleMock from '../../../../mock/system/role';
 import UserManageMock from '../../../../mock/inquiry/userManage';
+import ProfitMock from '../../../../mock/inquiry/profit';
 
 export default [
   UserMock,
@@ -18,4 +19,5 @@ export default [
   SystemRoleMock,
   UserTableMock,
   UserManageMock,
+  ProfitMock,
 ];

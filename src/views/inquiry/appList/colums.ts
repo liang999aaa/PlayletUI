@@ -150,36 +150,46 @@ export const columns: BasicColumn<ListData>[] = [
     title: 'gid',
     key: 'Id',
     width: 130,
+    align: 'center',
+    fixed: 'left',
   },
   {
     title: '游戏名',
     key: 'name',
+    align: 'center',
   },
   {
     title: '公告',
     key: 'announcementContent',
     ifShow: false,
+    align: 'center',
   },
   {
     title: '公告状态',
     key: 'announcementStatus',
     ifShow: false,
+    align: 'center',
   },
   {
     title: 'appid',
     key: 'appId',
+    align: 'center',
   },
   {
     title: 'ulinkid',
     key: 'ulinkid',
+    align: 'center',
   },
   {
     title: '版本号',
     key: 'app_version',
+    align: 'center',
   },
   {
     title: '状态',
     key: 'status',
+    width: 100,
+    align: 'center',
     render(record) {
       return h(
         NTag,

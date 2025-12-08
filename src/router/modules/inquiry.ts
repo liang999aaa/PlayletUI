@@ -26,6 +26,26 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/inquiry/appList/appList.vue'),
       },
       {
+        path: 'app-invite/:id?',
+        name: 'app-invite',
+        meta: {
+          title: '设置邀请奖励任务',
+          hidden: true,
+          // activeMenu: 'app-invite',
+        },
+        component: () => import('@/views/inquiry/appList/invite/invite.vue'),
+      },
+      {
+        path: 'app-profit/:id?',
+        name: 'app-profit',
+        meta: {
+          title: '设置收益比例',
+          hidden: true,
+          // activeMenu: 'app-invite',
+        },
+        component: () => import('@/views/inquiry/appList/profit/index.vue'),
+      },
+      {
         path: 'userManage',
         name: 'inquiry_user_manage',
         meta: {

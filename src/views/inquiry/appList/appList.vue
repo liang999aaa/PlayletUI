@@ -198,7 +198,8 @@
         </template>
       </n-modal>
 
-      <basicModal @register="modalRegister" class="basicModal" @on-ok="okModal">
+      <basicModal @register="modalRegister" class="basicModal">
+        <template #action></template>
         <template #default>
           <n-form
             :model="fkData"
@@ -208,10 +209,15 @@
             :label-width="220"
           >
             <n-form-item label="是否开启风控" path="states">
-              <n-select v-model:value="fkData.states" :options="fkoptions" />
+              <n-select
+                :disabled="!fkData.isChange"
+                v-model:value="fkData.states"
+                :options="fkoptions"
+              />
             </n-form-item>
             <n-form-item label="一个微信每天最多登录几台手机" path="num1">
               <n-input
+                :disabled="!fkData.isChange"
                 placeholder="请输入"
                 :allow-input="onlyAllowNumber"
                 v-model:value="fkData.num1"
@@ -219,10 +225,16 @@
             </n-form-item>
             <n-form-item label="一个IP每天最多允许几台手机" path="num2">
               <n-input
+                :disabled="!fkData.isChange"
                 placeholder="请输入"
                 :allow-input="onlyAllowNumber"
                 v-model:value="fkData.num2"
               />
+            </n-form-item>
+            <n-form-item label=" ">
+              <n-button type="primary" :secondary="!fkData.isChange" @click="fkSubmit"
+                >{{ fkData.isChange ? '立即保存' : '编辑' }}
+              </n-button>
             </n-form-item>
           </n-form>
         </template>
@@ -235,6 +247,7 @@
   import { PlusOutlined } from '@vicons/antd';
   import { QuillEditor } from '@vueup/vue-quill';
   import '@vueup/vue-quill/dist/vue-quill.snow.css';
+  import { useRouter } from 'vue-router';
 
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
@@ -243,6 +256,8 @@
   import { type FormRules } from 'naive-ui';
   import { onlyAllowNumber } from '@/utils';
   import { basicModal, useModal } from '@/components/Modal';
+
+  const router = useRouter();
 
   const schemas: FormSchema[] = [
     {
@@ -294,7 +309,7 @@
   };
   // 操作栏
   const actionColumn = reactive({
-    width: 280,
+    width: 520,
     title: '操作',
     key: 'action',
     fixed: 'right',
@@ -313,8 +328,28 @@
             // auth: ['basic_list'],
           },
           {
+            label: '设置邀请奖励任务',
+            onClick: to.bind(null, record, 'app-invite'),
+            // 根据业务控制是否显示 isShow 和 auth 是并且关系
+            ifShow: () => {
+              return true;
+            },
+            // 根据权限控制是否显示: 有权限，会显示，支持多个
+            // auth: ['basic_list'],
+          },
+          {
             label: '设置公告',
             onClick: handleNotice.bind(null, record),
+            // 根据业务控制是否显示 isShow 和 auth 是并且关系
+            ifShow: () => {
+              return true;
+            },
+            // 根据权限控制是否显示: 有权限，会显示，支持多个
+            // auth: ['basic_list'],
+          },
+          {
+            label: '设置收益比例',
+            onClick: to.bind(null, record, 'app-profit'),
             // 根据业务控制是否显示 isShow 和 auth 是并且关系
             ifShow: () => {
               return true;
@@ -336,6 +371,10 @@
       });
     },
   });
+  function to(record: Recordable, path: string) {
+    router.push({ name: path, params: { id: record.Id } });
+  }
+
   function handleEdit(record: Recordable) {
     nextTick(() => {
       fromData.value = record as ListData;
@@ -487,6 +526,7 @@
     states: 0,
     num1: 0,
     num2: 0,
+    isChange: 0,
   };
   const fkData = ref<FKDATA>({
     ...FKDATA,
@@ -498,21 +538,13 @@
       message: '请输入',
     },
   };
-  async function okModal() {
-    console.log('提交风控');
-    // const formRes = await submit();
-    // if (formRes) {
-    closeModal();
-    //   console.log('formRes', formRes);
-    //   message.success('提交成功');
-    // } else {
-    //   message.error('验证失败，请填写完整信息');
-    //   setSubLoading(false);
-    // }
+  function fkSubmit() {
+    if (fkData.value.isChange) {
+      window['$message'].success('提交信息');
+      closeModal();
+    } else {
+      fkData.value.isChange = 1;
+    }
   }
 </script>
-<style lang="less">
-  .n-dialog.basicModal {
-    width: 46vw;
-  }
-</style>
+<style lang="less"></style>

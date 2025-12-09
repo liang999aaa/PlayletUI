@@ -96,6 +96,30 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/inquiry/adRevenue/index.vue'),
       },
+      {
+        path: 'abnormalData',
+        name: 'inquiry_abnormal_data',
+        meta: {
+          title: '异常数据查询',
+        },
+        component: () => import('@/views/inquiry/abnormalData/index.vue'),
+      },
+      {
+        path: 'withdrawRecord',
+        name: 'inquiry_withdraw_record',
+        meta: {
+          title: '提现审核记录',
+        },
+        component: () => import('@/views/inquiry/withdrawRecord/index.vue'),
+      },
+      {
+        path: 'withdrawFlow',
+        name: 'inquiry_withdraw_flow',
+        meta: {
+          title: '提现流水',
+        },
+        component: () => import('@/views/inquiry/withdrawFlow/index.vue'),
+      },
     ],
   },
 ];

@@ -14,6 +14,9 @@ import AdManageMock from '../../../../mock/inquiry/adManage';
 import AdCodeManageMock from '../../../../mock/inquiry/adCodeManage';
 import CoinRecordMock from '../../../../mock/inquiry/coinRecord';
 import AdRevenueMock from '../../../../mock/inquiry/adRevenue';
+import AbnormalDataMock from '../../../../mock/inquiry/abnormalData';
+import WithdrawRecordMock from '../../../../mock/inquiry/withdrawRecord';
+import WithdrawFlowMock from '../../../../mock/inquiry/withdrawFlow';
 
 export default [
   UserMock,
@@ -30,4 +33,7 @@ export default [
   AdCodeManageMock,
   CoinRecordMock,
   AdRevenueMock,
+  AbnormalDataMock,
+  WithdrawRecordMock,
+  WithdrawFlowMock,
 ];

@@ -64,14 +64,14 @@ export const useUserStore = defineStore({
     // 登录
     async login(params: any) {
       const response = await login(params);
-      const { result, code } = response;
+      const { Data, code } = response;
       if (code === ResultEnum.SUCCESS) {
         const ex = 7 * 24 * 60 * 60;
-        storage.set(ACCESS_TOKEN, result.token, ex);
-        storage.set(CURRENT_USER, result, ex);
+        storage.set(ACCESS_TOKEN, Data.token, ex);
+        storage.set(CURRENT_USER, Data, ex);
         storage.set(IS_SCREENLOCKED, false);
-        this.setToken(result.token);
-        this.setUserInfo(result);
+        this.setToken(Data.token);
+        this.setUserInfo(Data);
       }
       return response;
     },
@@ -79,16 +79,55 @@ export const useUserStore = defineStore({
     // 获取用户信息
     async getInfo() {
       const data = await getUserInfoApi();
-      const { result } = data;
-      if (result.permissions && result.permissions.length) {
-        const permissionsList = result.permissions;
+      const { Data } = data;
+      console.log(Data);
+      // Data.permissions = [
+      //   {
+      //     label: '首页',
+      //     value: 'dashboard_console',
+      //   },
+      //   {
+      //     label: '监控页',
+      //     value: 'dashboard_monitor',
+      //   },
+      //   {
+      //     label: '工作台',
+      //     value: 'dashboard_workplace',
+      //   },
+      //   {
+      //     label: '基础列表',
+      //     value: 'basic_list',
+      //   },
+      //   {
+      //     label: '基础列表删除',
+      //     value: 'basic_list_delete',
+      //   },
+      //   {
+      //     label: '用户管理',
+      //     value: 'system_user',
+      //   },
+      //   {
+      //     label: '重置密码',
+      //     value: 'system_user_reset',
+      //   },
+      //   {
+      //     label: '菜单权限',
+      //     value: 'system_menu',
+      //   },
+      //   {
+      //     label: '角色权限',
+      //     value: 'system_role',
+      //   },
+      // ];
+      if (Data.permissions && Data.permissions.length) {
+        const permissionsList = Data.permissions;
         this.setPermissions(permissionsList);
-        this.setUserInfo(result);
+        this.setUserInfo(Data);
       } else {
         throw new Error('getInfo: permissionsList must be a non-null array !');
       }
-      this.setAvatar(result.avatar);
-      return result;
+      this.setAvatar(Data.avatar);
+      return Data;
     },
 
     // 登出

@@ -12,13 +12,25 @@ export function getUserInfo() {
 }
 
 /**
+ * @description: 获取登录验证码（返回图片blob）
+ */
+export async function getCode(): Promise<string> {
+  const response = await fetch('/api/am/v1/account/captcha', {
+    method: 'GET',
+    credentials: 'include',
+  });
+  const blob = await response.blob();
+  return URL.createObjectURL(blob);
+}
+
+/**
  * @description: 用户登录
  */
 export function login(params) {
   return Alova.Post<InResult>(
-    '/login',
+    '/am/v1/account/login',
     {
-      params,
+      ...params,
     },
     {
       meta: {

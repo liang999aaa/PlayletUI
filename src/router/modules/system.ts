@@ -13,15 +13,16 @@ const routes: Array<RouteRecordRaw> = [
       title: '权限管理',
       icon: renderIcon(ReorderFourOutline),
       sort: 1,
-      permissions: ['system_menu', 'system_role', 'system_user'],
+      permissions: ['system_menu', 'system_role', 'system_user', 'system_operation_log'],
     },
     children: [
       {
         path: 'user',
         name: 'system_user',
         meta: {
-          title: '用户管理',
+          title: '管理员管理',
           permissions: ['system_user'],
+          keepAlive: true,
         },
         component: () => import('@/views/system/user/user.vue'),
       },
@@ -31,6 +32,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '菜单权限',
           permissions: ['system_menu'],
+          keepAlive: true,
         },
         component: () => import('@/views/system/menu/menu.vue'),
       },
@@ -40,8 +42,19 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '角色权限',
           permissions: ['system_role'],
+          keepAlive: true,
         },
         component: () => import('@/views/system/role/role.vue'),
+      },
+      {
+        path: 'operationLog',
+        name: 'system_operation_log',
+        meta: {
+          title: '管理员日志',
+          keepAlive: true,
+          // permissions: ['system_operation_log'],
+        },
+        component: () => import('@/views/system/operationLog/operationLog.vue'),
       },
     ],
   },

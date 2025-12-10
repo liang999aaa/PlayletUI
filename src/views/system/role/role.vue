@@ -1,15 +1,13 @@
 <template>
-  <div>
-    <div class="n-layout-page-header">
-      <n-card :bordered="false" title="角色权限管理">
-        页面数据为 Mock 示例数据，非真实数据。
-      </n-card>
-    </div>
-    <n-card :bordered="false" class="mt-4 proCard">
+  <n-flex vertical>
+    <n-card :bordered="false">
+      <BasicForm @register="register" @submit="handleSubmit" @reset="handleReset" />
+    </n-card>
+    <n-card :bordered="false">
       <BasicTable
         :columns="columns"
         :request="loadDataTable"
-        :row-key="(row) => row.id"
+        :row-key="(row) => row.Id"
         ref="actionRef"
         :actionColumn="actionColumn"
         @update:checked-row-keys="onCheckedRow"
@@ -61,13 +59,14 @@
     </n-modal>
     <CreateModal ref="createModalRef" />
     <EditModal ref="editModalRef" />
-  </div>
+  </n-flex>
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, unref, h, onMounted } from 'vue';
+  import { reactive, ref, h, onMounted } from 'vue';
   import { useMessage } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
+  import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
   import { getRoleList } from '@/api/system/role';
   import { getMenuList } from '@/api/system/menu';
   import { columns } from './columns';
@@ -76,6 +75,38 @@
   import CreateModal from './CreateModal.vue';
   import EditModal from './EditModal.vue';
   import type { ListDate } from '@/api/system/menu';
+
+  // 搜索表单配置
+  const schemas: FormSchema[] = [
+    {
+      field: 'roleName',
+      component: 'NInput',
+      label: '角色名称',
+      componentProps: {
+        placeholder: '请输入角色名称',
+      },
+    },
+    {
+      field: 'roleStatus',
+      component: 'NSelect',
+      label: '角色状态',
+      componentProps: {
+        placeholder: '请选择',
+        options: [
+          { label: '全部', value: -1 },
+          { label: '启用', value: 1 },
+          { label: '禁用', value: 0 },
+        ],
+      },
+    },
+  ];
+
+  const [register, { getFieldsValue }] = useForm({
+    gridProps: { cols: '1 s:1 m:2 l:3 xl:5 2xl:5' },
+    labelWidth: 80,
+    schemas,
+    size: 'small',
+  });
 
   const message = useMessage();
   const actionRef = ref();
@@ -89,9 +120,15 @@
   const expandedKeys = ref<string[]>([]);
   const checkedKeys = ref<string[]>(['console', 'step-form']);
 
-  const params = reactive({
-    name: 'NaiveAdmin',
-  });
+  // 搜索
+  const handleSubmit = (_val) => {
+    reloadTable();
+  };
+
+  // 重置
+  const handleReset = (_val) => {
+    reloadTable();
+  };
 
   const actionColumn = reactive({
     width: 250,
@@ -136,11 +173,14 @@
   });
 
   const loadDataTable = async (res: any) => {
-    let _params = {
-      ...unref(params),
-      ...res,
+    const formValues = getFieldsValue();
+    const params = {
+      pageSize: res.pageSize,
+      pageIndex: res.pageIndex,
+      roleName: formValues.roleName || '',
+      roleStatus: formValues.roleStatus ?? -1,
     };
-    return await getRoleList(_params);
+    return await getRoleList(params);
   };
 
   function addRole() {
@@ -210,9 +250,9 @@
   }
 
   onMounted(async () => {
-    const treeMenuList = await getMenuList();
-    expandedKeys.value = treeMenuList?.list.map((item) => item.key);
-    treeData.value = treeMenuList?.list;
+    // const treeMenuList = await getMenuList();
+    // expandedKeys.value = treeMenuList?.list.map((item) => item.key);
+    // treeData.value = treeMenuList?.list;
   });
 </script>
 

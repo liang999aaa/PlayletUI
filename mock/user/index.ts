@@ -1,5 +1,4 @@
 import Mock from 'mockjs';
-import { resultSuccess } from '../_util';
 import { defineMock } from '@alova/mock';
 
 const Random = Mock.Random;
@@ -53,7 +52,14 @@ const adminInfo = {
     },
   ],
 };
-
+function resultSuccess(result, { message = 'ok' } = {}) {
+  return Mock.mock({
+    code: 200,
+    Data: result,
+    message,
+    type: 'success',
+  });
+}
 export default defineMock({
   '[POST]/api/login': () => resultSuccess({ token }),
   '/api/admin_info': () => resultSuccess(adminInfo),

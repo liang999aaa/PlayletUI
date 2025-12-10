@@ -7,7 +7,7 @@
       <BasicTable
         :columns="columns"
         :request="loadDataTable"
-        :row-key="(row:ListData) => row.id"
+        :row-key="(row) => row.id"
         ref="actionRef"
         :actionColumn="actionColumn"
         @update:checked-row-keys="onCheckedRow"
@@ -47,8 +47,8 @@
           :label-width="80"
           class="py-4"
         >
-          <n-form-item label="登录名" path="name">
-            <n-input placeholder="请输入名称" v-model:value="fromData.name" />
+          <n-form-item label="登录名" path="userID">
+            <n-input placeholder="请输入登录名" v-model:value="fromData.userID" />
           </n-form-item>
           <n-form-item label="密码" path="pwd">
             <n-input
@@ -119,8 +119,8 @@
           :label-width="80"
           class="py-4"
         >
-          <n-form-item label="登录名" path="name">
-            <n-input disabled placeholder="请输入名称" v-model:value="fromData.name" />
+          <n-form-item label="登录名" path="userID">
+            <n-input disabled placeholder="请输入登录名" v-model:value="fromData.userID" />
           </n-form-item>
           <n-form-item label="密码" path="pwd">
             <n-input type="password" placeholder="请输入密码" v-model:value="fromData.pwd" />
@@ -143,29 +143,29 @@
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
   import { columns, ListData } from './colums';
-  import { getUserList } from '@/api/table/list';
+  import { getAdminslist } from '@/api/permission/user';
   import { type FormRules } from 'naive-ui';
+  import { formatDate } from "@/utils/dateUtil";
 
   const schemas: FormSchema[] = [
     {
-      field: 'name',
+      field: 'userName',
       component: 'NInput',
-      label: '登录名称',
+      label: '用户昵称',
       componentProps: {
-        placeholder: '请输入姓名',
+        placeholder: '请输入用户昵称',
       },
     },
     {
       field: 'mobile',
-      component: 'NInputNumber',
-      label: '手机号码',
+      component: 'NInput',
+      label: '手机号',
       componentProps: {
-        placeholder: '请输入手机号码',
-        showButton: false,
+        placeholder: '请输入手机号',
       },
     },
     {
-      field: 'type',
+      field: 'userStatus',
       component: 'NSelect',
       label: '用户状态',
       componentProps: {
@@ -181,22 +181,18 @@
           },
           {
             label: '禁用',
-            value: 0,
+            value: 2,
           },
         ],
       },
     },
     {
-      field: 'makeDate',
+      field: 'dateRange',
       component: 'NDatePicker',
-      label: '预约时间',
-      defaultValue: [0, Date.now()],
+      label: '时间范围',
       componentProps: {
         type: 'daterange',
         clearable: true,
-        onUpdateValue: (e: any) => {
-          console.log(e);
-        },
       },
     },
   ];
@@ -253,19 +249,34 @@
   });
 
   // 搜索
-  const handleSubmit = (val) => {
-    console.log('搜索', val);
+  const handleSubmit = (_val) => {
     reloadTable();
   };
   // 重置
-  const handleReset = () => {
-    console.log('重置');
+  const handleReset = (_val) => {
+    reloadTable();
   };
 
   // 获取列表数据
   const loadDataTable = async (res) => {
-    // console.log(getFieldsValue(), res);
-    return await getUserList({ ...getFieldsValue(), ...res });
+    const formValues = getFieldsValue();
+    // 处理时间范围 - NDatePicker 返回的是时间戳数组
+    let start = '';
+    let end = '';
+    if (formValues.dateRange && formValues.dateRange.length === 2) {
+      start = formatDate(formValues.dateRange[0]);
+      end = formatDate(formValues.dateRange[1]);
+    }
+    const params = {
+      pageSize: res.pageSize,
+      pageIndex: res.pageIndex,
+      userName: formValues.userName || '',
+      mobile: formValues.mobile || '',
+      userStatus: formValues.userStatus ?? -1,
+      start,
+      end,
+    };
+    return await getAdminslist(params);
   };
 
   function handleDelete(record: Recordable) {
@@ -309,11 +320,28 @@
       label: '启用',
     },
   ];
-  const FROMDATA = {
-    name: '',
+  const FROMDATA: ListData = {
     id: 0,
+    userID: '',
+    mobile: null,
+    email: null,
+    userName: null,
+    pwd: '',
+    createtime: '',
+    salt: '',
     status: 0,
-    createDate: '',
+    lastLoginTime: null,
+    remark: null,
+    parentid: null,
+    istg: 0,
+    moneys: null,
+    openid: null,
+    ratioUnion: null,
+    appSign: null,
+    tgcode: null,
+    QQ: null,
+    channel: null,
+    uid: null,
   };
   // 角色列表
   const roleLIst = [

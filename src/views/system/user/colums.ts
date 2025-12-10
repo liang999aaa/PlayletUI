@@ -4,32 +4,54 @@ import { BasicColumn } from '@/components/Table';
 
 export interface ListData {
   id: number;
-  name: string;
-  userName?: string;
+  userID: string;
+  mobile: string | null;
+  email: string | null;
+  userName: string | null;
+  pwd: string;
+  createtime: string;
+  salt: string;
   status: number;
-  createDate: string;
-  pwd?: string;
-  mobile?: string;
+  lastLoginTime: string | null;
+  remark: string | null;
+  parentid: number | null;
+  istg: number;
+  moneys: number | null;
+  openid: string | null;
+  ratioUnion: number | null;
+  appSign: string | null;
+  tgcode: string | null;
+  QQ: string | null;
+  channel: string | null;
+  uid: string | null;
   role?: number[];
   games?: number[];
-  remark?: string;
 }
 
 export const columns: BasicColumn<ListData>[] = [
   {
     type: 'selection',
-  },
-  {
-    title: 'id',
-    key: 'id',
+    key: 'selection',
   },
   {
     title: '登录名',
-    key: 'name',
+    key: 'userID',
+    width: 100,
+  },
+  {
+    title: '用户名',
+    key: 'userName',
+    width: 120,
+  },
+  {
+    title: '手机号',
+    key: 'mobile',
+    width: 130,
   },
   {
     title: '状态',
     key: 'status',
+    width: 80,
     render(record) {
       return h(
         NTag,
@@ -41,5 +63,21 @@ export const columns: BasicColumn<ListData>[] = [
         }
       );
     },
+  },
+  {
+    title: '创建时间',
+    key: 'createtime',
+    width: 180,
+  },
+  {
+    title: '最后登录时间',
+    key: 'lastLoginTime',
+    width: 180,
+  },
+  {
+    title: '备注',
+    key: 'remark',
+    width: 150,
+    ellipsis: { tooltip: true },
   },
 ];

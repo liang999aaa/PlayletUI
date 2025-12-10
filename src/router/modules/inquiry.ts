@@ -21,6 +21,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'inquiry_app_list',
         meta: {
           title: '应用列表',
+          keepAlive: true,
           // permissions: ['inquiry_app_list'],
         },
         component: () => import('@/views/inquiry/appList/appList.vue'),
@@ -31,6 +32,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '设置邀请奖励任务',
           hidden: true,
+          keepAlive: true,
           // activeMenu: 'app-invite',
         },
         component: () => import('@/views/inquiry/appList/invite/invite.vue'),
@@ -41,6 +43,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '设置收益比例',
           hidden: true,
+          keepAlive: true,
           // activeMenu: 'app-invite',
         },
         component: () => import('@/views/inquiry/appList/profit/index.vue'),
@@ -50,6 +53,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'inquiry_user_manage',
         meta: {
           title: '用户管理',
+          keepAlive: true,
           // permissions: ['inquiry_user_manage'],
         },
         component: () => import('@/views/inquiry/userManage/index.vue'),
@@ -59,6 +63,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'data_product_recommend',
         meta: {
           title: '其他产品推荐',
+          keepAlive: true,
         },
         component: () => import('@/views/inquiry/productRecommend/index.vue'),
       },
@@ -67,6 +72,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'inquiry_ad_manage',
         meta: {
           title: '广告管理',
+          keepAlive: true,
         },
         component: () => import('@/views/inquiry/adManage/index.vue'),
       },
@@ -76,6 +82,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           title: '代码位管理',
           hidden: true,
+          keepAlive: true,
           // activeMenu: 'app-invite',
         },
         component: () => import('@/views/inquiry/adManage/adCode/index.vue'),
@@ -85,6 +92,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'inquiry_coin_record',
         meta: {
           title: '金币增加记录',
+          keepAlive: true,
         },
         component: () => import('@/views/inquiry/coinRecord/index.vue'),
       },
@@ -93,6 +101,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'inquiry_ad_revenue',
         meta: {
           title: '广告收益列表',
+          keepAlive: true,
         },
         component: () => import('@/views/inquiry/adRevenue/index.vue'),
       },
@@ -101,6 +110,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'inquiry_abnormal_data',
         meta: {
           title: '异常数据查询',
+          keepAlive: true,
         },
         component: () => import('@/views/inquiry/abnormalData/index.vue'),
       },
@@ -109,6 +119,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'inquiry_withdraw_record',
         meta: {
           title: '提现审核记录',
+          keepAlive: true,
         },
         component: () => import('@/views/inquiry/withdrawRecord/index.vue'),
       },
@@ -117,6 +128,7 @@ const routes: Array<RouteRecordRaw> = [
         name: 'inquiry_withdraw_flow',
         meta: {
           title: '提现流水',
+          keepAlive: true,
         },
         component: () => import('@/views/inquiry/withdrawFlow/index.vue'),
       },

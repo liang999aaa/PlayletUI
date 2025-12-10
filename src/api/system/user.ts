@@ -1,17 +1,6 @@
 import { Alova } from '@/utils/http/alova/index';
 
 /**
- * @description: 获取用户信息
- */
-export function getUserInfo() {
-  return Alova.Get<InResult>('/admin_info', {
-    meta: {
-      isReturnNativeResponse: true,
-    },
-  });
-}
-
-/**
  * @description: 获取登录验证码（返回图片blob）
  */
 export async function getCode(): Promise<string> {
@@ -38,6 +27,17 @@ export function login(params) {
       },
     }
   );
+}
+
+/**
+ * @description: 获取用户信息
+ */
+export function getUserInfo() {
+  return Alova.Get<InResult>('/admin_info', {
+    meta: {
+      isReturnNativeResponse: true,
+    },
+  });
 }
 
 /**

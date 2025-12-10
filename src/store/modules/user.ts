@@ -80,45 +80,6 @@ export const useUserStore = defineStore({
     async getInfo() {
       const data = await getUserInfoApi();
       const { Data } = data;
-      console.log(Data);
-      // Data.permissions = [
-      //   {
-      //     label: '首页',
-      //     value: 'dashboard_console',
-      //   },
-      //   {
-      //     label: '监控页',
-      //     value: 'dashboard_monitor',
-      //   },
-      //   {
-      //     label: '工作台',
-      //     value: 'dashboard_workplace',
-      //   },
-      //   {
-      //     label: '基础列表',
-      //     value: 'basic_list',
-      //   },
-      //   {
-      //     label: '基础列表删除',
-      //     value: 'basic_list_delete',
-      //   },
-      //   {
-      //     label: '用户管理',
-      //     value: 'system_user',
-      //   },
-      //   {
-      //     label: '重置密码',
-      //     value: 'system_user_reset',
-      //   },
-      //   {
-      //     label: '菜单权限',
-      //     value: 'system_menu',
-      //   },
-      //   {
-      //     label: '角色权限',
-      //     value: 'system_role',
-      //   },
-      // ];
       if (Data.permissions && Data.permissions.length) {
         const permissionsList = Data.permissions;
         this.setPermissions(permissionsList);

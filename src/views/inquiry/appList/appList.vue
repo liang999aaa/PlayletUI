@@ -304,8 +304,9 @@
   };
   // 获取列表数据
   const loadDataTable = async (res) => {
-    // console.log(getFieldsValue(), res);
-    return await getAppList({ ...getFieldsValue(), ...res });
+    const data = await getAppList({ ...getFieldsValue(), ...res });
+    console.log(data);
+    return data;
   };
   // 操作栏
   const actionColumn = reactive({

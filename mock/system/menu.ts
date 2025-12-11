@@ -129,7 +129,7 @@ export default defineMock({
   '/api/menu/list': () => {
     const list = menuList();
     return resultSuccess({
-      list,
+      Data: list,
     });
   },
 });

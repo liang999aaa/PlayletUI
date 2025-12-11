@@ -1,12 +1,24 @@
 import Mock from 'mockjs';
 
 export function resultSuccess(result, { message = 'ok' } = {}) {
-  return Mock.mock({
-    code: 200,
-    result: result,
+  if (result?.list) {
+    return Mock.mock({
+      code: 0,
+      message,
+      type: 'success',
+      pageIndex: result.page,
+      pageSize: result.pageSize,
+      Data: result.list,
+      Total: result.pageCount,
+    });
+  }
+  const data = Mock.mock({
+    code: 0,
     message,
     type: 'success',
+    ...result,
   });
+  return data;
 }
 
 export function resultPageSuccess<T = any>(

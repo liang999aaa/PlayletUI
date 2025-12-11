@@ -65,7 +65,7 @@ export const useUserStore = defineStore({
     async login(params: any) {
       const response = await login(params);
       const { Data, code } = response;
-      if (code === ResultEnum.SUCCESS) {
+      if (code === 200) {
         const ex = 7 * 24 * 60 * 60;
         storage.set(ACCESS_TOKEN, Data.token, ex);
         storage.set(CURRENT_USER, Data, ex);

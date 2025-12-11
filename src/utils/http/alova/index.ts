@@ -42,17 +42,17 @@ export const Alova = createAlova({
   // 关闭全局请求缓存
   // cacheFor: null,
   // 全局缓存配置
-  // cacheFor: {
-  //   POST: {
-  //     mode: 'memory',
-  //     expire: 60 * 10 * 1000
-  //   },
-  //   GET: {
-  //     mode: 'memory',
-  //     expire: 60 * 10 * 1000
-  //   },
-  //   HEAD: 60 * 10 * 1000 // 统一设置HEAD请求的缓存模式
-  // },
+  cacheFor: {
+    //   POST: {
+    //     mode: 'memory',
+    //     expire: 60 * 10 * 1000
+    //   },
+    GET: {
+      mode: 'memory',
+      expire: 3 * 1000,
+    },
+    // HEAD: 3 * 1000, // 统一设置HEAD请求的缓存模式
+  },
   // 在开发环境开启缓存命中日志
   cacheLogger: process.env.NODE_ENV === 'development',
   requestAdapter: mockAdapter,
@@ -74,8 +74,9 @@ export const Alova = createAlova({
   },
   responded: {
     onSuccess: async (response, method) => {
+      // console.log('🚀 ~ responded ~ response:', response, method);
       const res = (response.json && (await response.json())) || response.body;
-
+      console.log('🚀 ~ responded ~ res:', res);
       // 是否返回原生响应头 比如：需要获取响应头时使用该属性
       if (method.meta?.isReturnNativeResponse) {
         return res;
@@ -86,7 +87,7 @@ export const Alova = createAlova({
       // 不进行任何处理，直接返回
       // 用于需要直接获取 code、result、 message 这些信息时开启
       if (method.meta?.isTransformResponse === false) {
-        return res.data;
+        return res;
       }
 
       // @ts-ignore
@@ -95,7 +96,7 @@ export const Alova = createAlova({
       const Modal = window.$dialog;
 
       const LoginPath = PageEnum.BASE_LOGIN;
-      if (ResultEnum.SUCCESS === code) {
+      if (ResultEnum.SUCCESS === code || 200 === code) {
         return res;
       }
       // 需要登录

@@ -15,3 +15,32 @@ export function getAdminslist(params) {
     params,
   });
 }
+
+/**
+ * @description: 批量删除管理员
+ * @param {number[]} ids - 管理员ID数组
+ */
+export function batchDeleteAdmins(ids: number[]) {
+  return Alova.Post<InResult>('/am/v1/auths/admins/batch_delete', ids);
+}
+/**
+ * @description: 重置密码
+ *
+ */
+export function batchResetpwdAdmins(params) {
+  return Alova.Post<InResult>('/am/v1/auths/admins/reset_pwd', params);
+}
+/**
+ * @description: 创建管理员
+ *
+ */
+export function createAdmins(params) {
+  return Alova.Post<InResult>('/am/v1/auths/admins/create', params);
+}
+/**
+ * @description: 更新管理员
+ *
+ */
+export function updateAdmins(params) {
+  return Alova.Post<InResult>('/am/v1/auths/admins/update', params);
+}

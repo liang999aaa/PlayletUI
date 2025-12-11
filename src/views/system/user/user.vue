@@ -143,9 +143,9 @@
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
   import { columns, ListData } from './colums';
-  import { getAdminslist } from '@/api/permission/user';
+  import { getAdminslist, batchDeleteAdmins, batchResetpwdAdmins, createAdmins, updateAdmins } from '@/api/permission/user';
   import { type FormRules } from 'naive-ui';
-  import { formatDate } from "@/utils/dateUtil";
+  import { formatDate } from '@/utils/dateUtil';
 
   const schemas: FormSchema[] = [
     {
@@ -213,16 +213,16 @@
       return h(TableAction as any, {
         style: 'button',
         actions: [
-          {
-            label: '删除',
-            onClick: handleDelete.bind(null, record),
-            // 根据业务控制是否显示 isShow 和 auth 是并且关系
-            ifShow: () => {
-              return true;
-            },
-            // 根据权限控制是否显示: 有权限，会显示，支持多个
-            // auth: ['basic_list'],
-          },
+          // {
+          //   label: '删除',
+          //   onClick: handleDelete.bind(null, record),
+          //   // 根据业务控制是否显示 isShow 和 auth 是并且关系
+          //   ifShow: () => {
+          //     return true;
+          //   },
+          //   // 根据权限控制是否显示: 有权限，会显示，支持多个
+          //   // auth: ['basic_list'],
+          // },
           {
             label: '编辑',
             onClick: handleEdit.bind(null, record),
@@ -279,18 +279,19 @@
     return await getAdminslist(params);
   };
 
-  function handleDelete(record: Recordable) {
-    window['$message'].info('删除');
-  }
+  // function handleDelete(record: Recordable) {
+  //   window['$message'].info('删除');
+  // }
   function handleEdit(record: Recordable) {
     nextTick(() => {
+      isEdit.value = 1;
       fromData.value = record as ListData;
       showModal.value = true;
     });
   }
   function handleResetTab(record: Recordable) {
-    console.log('点击了重置', record);
     nextTick(() => {
+      record.pwd = '';
       fromData.value = record as ListData;
       pwdShowModal.value = true;
     });
@@ -370,7 +371,7 @@
     ...FROMDATA,
   });
   const rules: FormRules = {
-    name: {
+    userID: {
       required: true,
       trigger: ['blur', 'input'],
       message: '请输入名称',
@@ -380,20 +381,28 @@
       trigger: ['blur', 'input'],
       message: '请输入密码',
     },
-    userName: {
-      required: false,
-    },
   };
+  // 0: 新建 1: 编辑
+  const isEdit = ref(0);
   // 新建
   function addTable() {
     nextTick(() => {
+      isEdit.value = 0;
       fromData.value = { ...FROMDATA };
       showModal.value = true;
     });
   }
   // 删除
-  function deleteListUser() {
-    console.log('删除', selectArr.value);
+  async function deleteListUser() {
+    if (!selectArr.value.length) return;
+    try {
+      await batchDeleteAdmins(selectArr.value);
+      window['$message'].success('删除成功');
+      selectArr.value = [];
+      reloadTable();
+    } catch (error) {
+      window['$message'].error('删除失败');
+    }
   }
 
   // 提交修改
@@ -402,14 +411,25 @@
   function confirmForm(e) {
     e.preventDefault();
     formBtnLoading.value = true;
-    formRef.value.validate((errors) => {
+    formRef.value.validate(async (errors) => {
       if (!errors) {
+        if (isEdit.value === 0) {
+          await createAdmins({ ...fromData.value }).finally(() => {
+            formBtnLoading.value = false;
+          });
+        } else {
+          await updateAdmins({ ...fromData.value }).finally(() => {
+            formBtnLoading.value = false;
+          });
+        }
         // console.log(fromData.value);
-        window['$message'].success('新建成功');
+        // setTimeout(() => {
         setTimeout(() => {
+          window['$message'].success(isEdit.value === 0 ? '新建成功' : '编辑成功');
           showModal.value = false;
           reloadTable();
-        });
+        }, 500);
+        // });
       } else {
         window['$message'].error('请填写完整信息');
       }
@@ -429,17 +449,20 @@
     },
   };
   function confirmFormPwd(e) {
-    console.log(e);
     e.preventDefault();
     formBtnLoading.value = true;
-    formRefPwd.value.validate((errors) => {
+    formRefPwd.value.validate(async (errors) => {
       if (!errors) {
-        // console.log(fromData.value);
+        await batchResetpwdAdmins({ ...fromData.value }).finally(() => {
+          formBtnLoading.value = false;
+        });
+        // setTimeout(() => {
         window['$message'].success('修改成功');
         setTimeout(() => {
-          showModal.value = false;
+          pwdShowModal.value = false;
           reloadTable();
-        });
+        }, 500);
+        // });
       } else {
         window['$message'].error('请填写完整信息');
       }

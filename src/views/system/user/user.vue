@@ -10,6 +10,7 @@
         :row-key="(row) => row.id"
         ref="actionRef"
         :actionColumn="actionColumn"
+        :checked-row-keys="selectArr"
         @update:checked-row-keys="onCheckedRow"
         :scroll-x="1090"
         :striped="true"

@@ -16,6 +16,10 @@ export interface RoleData {
 
 export const columns: BasicColumn<RoleData>[] = [
   {
+    type: 'selection',
+    key: 'selection',
+  },
+  {
     title: '角色名称',
     key: 'RoleName',
     width: 150,

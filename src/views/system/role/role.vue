@@ -10,6 +10,7 @@
         :row-key="(row) => row.Id"
         ref="actionRef"
         :actionColumn="actionColumn"
+        :checked-row-keys="selectArr"
         @update:checked-row-keys="onCheckedRow"
       >
         <template #tableTitle>
@@ -20,6 +21,19 @@
               </n-icon>
             </template>
             新增角色
+          </n-button>
+          <n-button
+            type="error"
+            v-debounce="handleBatchDelete"
+            :disabled="!selectArr.length"
+            class="ml-2"
+          >
+            <template #icon>
+              <n-icon>
+                <DeleteFilled />
+              </n-icon>
+            </template>
+            删除
           </n-button>
         </template>
 
@@ -57,24 +71,32 @@
         </n-space>
       </template>
     </n-modal>
-    <CreateModal ref="createModalRef" />
-    <EditModal ref="editModalRef" />
+    <CreateModal ref="createModalRef" @success="reloadTable" />
+    <EditModal ref="editModalRef" @success="reloadTable" />
   </n-flex>
 </template>
 
 <script lang="ts" setup>
-  import { reactive, ref, h, onMounted } from 'vue';
+  import { reactive, ref, h, onMounted, onActivated, computed } from 'vue';
   import { useMessage } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, FormSchema, useForm } from '@/components/Form/index';
-  import { getRoleList } from '@/api/system/role';
+  import { getRoleList, batchDeleteRole } from '@/api/system/role';
   import { getMenuList } from '@/api/system/menu';
   import { columns } from './columns';
-  import { PlusOutlined } from '@vicons/antd';
+  import { PlusOutlined, DeleteFilled } from '@vicons/antd';
   import { getTreeAll } from '@/utils';
   import CreateModal from './CreateModal.vue';
   import EditModal from './EditModal.vue';
   import type { ListDate } from '@/api/system/menu';
+
+  // 定义组件名称，用于 keep-alive 缓存
+  defineOptions({
+    name: 'system_role',
+  });
+  onActivated(() => {
+    reloadTable();
+  });
 
   // 搜索表单配置
   const schemas: FormSchema[] = [
@@ -119,6 +141,7 @@
   const treeData = ref<ListDate[]>([]);
   const expandedKeys = ref<string[]>([]);
   const checkedKeys = ref<string[]>(['console', 'step-form']);
+  const selectArr = ref<number[]>([]);
 
   // 搜索
   const handleSubmit = (_val) => {
@@ -139,16 +162,16 @@
       return h(TableAction, {
         style: 'button',
         actions: [
-          {
-            label: '菜单权限',
-            onClick: handleMenuAuth.bind(null, record),
-            // 根据业务控制是否显示 isShow 和 auth 是并且关系
-            ifShow: () => {
-              return true;
-            },
-            // 根据权限控制是否显示: 有权限，会显示，支持多个
-            auth: ['basic_list'],
-          },
+          // {
+          //   label: '菜单权限',
+          //   onClick: handleMenuAuth.bind(null, record),
+          //   // 根据业务控制是否显示 isShow 和 auth 是并且关系
+          //   ifShow: () => {
+          //     return true;
+          //   },
+          //   // 根据权限控制是否显示: 有权限，会显示，支持多个
+          //   auth: ['basic_list'],
+          // },
           {
             label: '编辑',
             onClick: handleEdit.bind(null, record),
@@ -157,16 +180,16 @@
             },
             auth: ['basic_list'],
           },
-          {
-            label: '删除',
-            onClick: handleDelete.bind(null, record),
-            // 根据业务控制是否显示 isShow 和 auth 是并且关系
-            ifShow: () => {
-              return true;
-            },
-            // 根据权限控制是否显示: 有权限，会显示，支持多个
-            auth: ['basic_list'],
-          },
+          // {
+          //   label: '删除',
+          //   onClick: handleDelete.bind(null, record),
+          //   // 根据业务控制是否显示 isShow 和 auth 是并且关系
+          //   ifShow: () => {
+          //     return true;
+          //   },
+          //   // 根据权限控制是否显示: 有权限，会显示，支持多个
+          //   auth: ['basic_list'],
+          // },
         ],
       });
     },
@@ -188,7 +211,20 @@
   }
 
   function onCheckedRow(rowKeys: any[]) {
-    console.log(rowKeys);
+    selectArr.value = rowKeys;
+  }
+
+  // 批量删除
+  async function handleBatchDelete() {
+    if (!selectArr.value.length) return;
+    try {
+      await batchDeleteRole(selectArr.value);
+      message.success('删除成功');
+      selectArr.value = [];
+      reloadTable();
+    } catch (error) {
+      message.error('删除失败');
+    }
   }
 
   function reloadTable() {
